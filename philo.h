@@ -27,6 +27,7 @@ typedef struct s_arg
 }	t_arg;
 
 int		ft_atoi(const char *str);
+void	ft_atoi_args(t_arg *args, int nb_arg, char **arg);
 void	ft_init_arg(t_arg *args, int nb);
 void	ft_init_philo(t_philo *philo, int nb_philo);
 void	ft_init_fork(t_arg *args, int nb_philo);

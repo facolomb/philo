@@ -54,3 +54,15 @@ void	ft_init_arg(t_arg *args, int nb)
 	ft_init_philo(args->philo, nb);
 	ft_init_fork(args, nb);
 }
+
+void	ft_atoi_args(t_arg *args, int nb_arg, char **arg)
+{
+	args->till_death = ft_atoi(arg[2]);
+	args->time_eat = ft_atoi(arg[3]);
+	args->sleep = ft_atoi(arg[4]);
+	if (nb_arg == 6)
+		args->to_eat = ft_atoi(arg[5]);
+	else
+		args->to_eat = -1;
+	ft_init_arg(args, ft_atoi(arg[1]));
+}

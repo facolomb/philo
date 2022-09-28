@@ -9,16 +9,38 @@
 /*   Updated: 2022/09/20 15:33:25 by facolomb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "philo.h"
+
+void	ft_print(unsigned long time, t_philo *philo, char *str)
+{
+	pthread_mutex_lock(philo->print);
+	printf("%ld %d %s\n", time, philo->id, str);
+	pthread_mutex_unlock(philo->print);
+}
+
+int	ft_isalldigit(const char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] == '\0')
+		return (0);
+	while (str[i] != '\0')
+	{
+		if (!(str[i] >= '0' && str[i] <= '9'))
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 static char	*ft_trim(const char *str)
 {
 	char	*ret;
 
 	while (*str == ' ' || *str == '\t'
-		   || *str == '\v' || *str == '\f'
-		   || *str == '\r' || *str == '\n')
+		|| *str == '\v' || *str == '\f'
+		|| *str == '\r' || *str == '\n')
 	{
 		str++;
 	}

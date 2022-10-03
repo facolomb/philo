@@ -11,20 +11,6 @@
 /* ************************************************************************** */
 #include "philo.h"
 
-void	ft_free(t_arg *args, pthread_t *threads)
-{
-	int	i;
-
-	i = -1;
-	while (++i < args->nb_philo)
-		pthread_mutex_destroy(&args->forks[i]);
-	pthread_mutex_destroy(&args->pr);
-	free(args->philo);
-	free(args->forks);
-	free(args);
-	free(threads);
-}
-
 int	ft_all_philo_eat(t_arg *args)
 {
 	int		i;
@@ -42,7 +28,7 @@ int	ft_all_philo_eat(t_arg *args)
 	return (1);
 }
 
-void	ft_wait_free(t_arg *args, pthread_t *threads)
+void	ft_wait_end(t_arg *args, pthread_t *threads)
 {
 	int		i;
 	long	time;
@@ -71,14 +57,14 @@ void	ft_wait_free(t_arg *args, pthread_t *threads)
 	exit(0);
 }
 
-void	*ft_philo(void *arg)
+void	*ft_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
 	philo->last_eat = ft_time();
 	if (philo->id % 2 == 0)
-		usleep(50);
+		usleep(100);
 	while (1)
 	{
 		pthread_mutex_lock(philo->left_fork);
@@ -86,8 +72,8 @@ void	*ft_philo(void *arg)
 		pthread_mutex_lock(philo->rigth_fork);
 		ft_print(ft_time(), philo, "took a fork");
 		ft_print(ft_time(), philo, "is eating");
-		ft_sleep(philo, 1);
 		philo->last_eat = ft_time();
+		ft_sleep(philo, 1);
 		philo->has_eat++;
 		pthread_mutex_unlock(philo->left_fork);
 		pthread_mutex_unlock(philo->rigth_fork);
@@ -99,26 +85,36 @@ void	*ft_philo(void *arg)
 	}
 }
 
+void	ft_philo(t_arg *args, pthread_t *threads)
+{
+	int	i;
+	int	ret;
+
+	i = -1;
+	while (++i < args->nb_philo)
+	{
+		ret = pthread_create(&threads[i], NULL, ft_routine, args->philo + i);
+		if (ret != 0)
+			exit (1);
+	}
+}
+
 int	main(int argc, char **argv)
 {
-	int			i;
 	pthread_t	*threads;
 	t_arg		*args;
 	t_rules		rules;
 
 	if (argc > 4 && argc <= 6)
 	{
-		i = 0;
 		if (!ft_check_argv(argc, argv))
 			return (0);
 		ft_time();
-		i = -1;
 		args = malloc(sizeof(t_arg));
 		ft_atoi_argv(&rules, args, argc, argv);
 		threads = malloc(sizeof(pthread_t) * args->nb_philo);
-		while (++i < args->nb_philo)
-			pthread_create(&threads[i], NULL, ft_philo, args->philo + i);
-		ft_wait_free(args, threads);
+		ft_philo(args, threads);
+		ft_wait_end(args, threads);
 	}
 	else
 		printf("Wrong number of arguments\n");

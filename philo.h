@@ -56,4 +56,5 @@ void	ft_sleep(t_philo *philo, int is_eat);
 int		ft_atoi(const char *str);
 int		ft_isalldigit(const char *str);
 void	ft_print(unsigned long time, t_philo *philo, char *str);
+void	ft_free(t_arg *args, pthread_t *threads);
 #endif

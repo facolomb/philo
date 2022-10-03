@@ -15,6 +15,7 @@
 void	ft_init_fork(t_arg *args)
 {
 	int	i;
+	int	ret;
 
 	i = 1;
 	args->forks = malloc(sizeof(pthread_mutex_t) * args->nb_philo);
@@ -28,7 +29,9 @@ void	ft_init_fork(t_arg *args)
 	}
 	while (i >= 0)
 	{
-		pthread_mutex_init(&args->forks[i], NULL);
+		ret = pthread_mutex_init(&args->forks[i], NULL);
+		if (ret != 0)
+			exit (1);
 		i--;
 	}
 }

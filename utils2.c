@@ -14,18 +14,11 @@
 void	ft_free(t_arg *args, pthread_t *threads)
 {
 	int	i;
-	int	ret;
 
 	i = -1;
 	while (++i < args->nb_philo)
-	{
-		ret = pthread_mutex_destroy(&args->forks[i]);
-		if (ret != 0)
-			exit (1);
-	}
-	ret = pthread_mutex_destroy(&args->pr);
-	if (ret != 0)
-		exit (1);
+		pthread_mutex_destroy(&args->forks[i]);
+	pthread_mutex_destroy(&args->pr);
 	free(args->philo);
 	free(args->forks);
 	free(args);

@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-void	ft_init_fork(t_arg *args)
+int	ft_init_fork(t_arg *args)
 {
 	int	i;
 	int	ret;
@@ -31,9 +31,10 @@ void	ft_init_fork(t_arg *args)
 	{
 		ret = pthread_mutex_init(&args->forks[i], NULL);
 		if (ret != 0)
-			exit (1);
+			return (1);
 		i--;
 	}
+	return (0);
 }
 
 void	ft_init_philo(t_philo *philo, t_rules *rules, t_arg args)
@@ -52,15 +53,15 @@ void	ft_init_philo(t_philo *philo, t_rules *rules, t_arg args)
 	}
 }
 
-void	ft_init_arg(t_arg *args, t_rules *rules)
+int	ft_init_arg(t_arg *args, t_rules *rules)
 {
 	pthread_mutex_init(&args->pr, NULL);
 	args->philo = malloc(sizeof(t_philo) * args->nb_philo);
 	ft_init_philo(args->philo, rules, *args);
-	ft_init_fork(args);
+	return (ft_init_fork(args));
 }
 
-void	ft_atoi_argv(t_rules *rules, t_arg *args, int nb_arg, char **arg)
+int	ft_atoi_argv(t_rules *rules, t_arg *args, int nb_arg, char **arg)
 {
 	args->nb_philo = ft_atoi(arg[1]);
 	rules->till_death = ft_atoi(arg[2]);
@@ -70,7 +71,7 @@ void	ft_atoi_argv(t_rules *rules, t_arg *args, int nb_arg, char **arg)
 		rules->to_eat = ft_atoi(arg[5]);
 	else
 		rules->to_eat = -1;
-	ft_init_arg(args, rules);
+	return (ft_init_arg(args, rules));
 }
 
 int	ft_check_argv(int argc, char **argv)
@@ -78,6 +79,11 @@ int	ft_check_argv(int argc, char **argv)
 	int	i;
 
 	i = 0;
+	if (argv[1][0] == '0')
+	{
+		printf("Wrong types of arguments\n");
+		return (0);
+	}
 	while (++i < argc)
 	{
 		if (ft_isalldigit(argv[i]) == 0)

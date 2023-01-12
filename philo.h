@@ -45,9 +45,7 @@ typedef struct s_arg
 }	t_arg;
 
 // -- Init -- //
-void	ft_atoi_argv(t_rules *rules, t_arg *args, int nb_arg, char **arg);
-void	ft_init_arg(t_arg *args, t_rules *rules);
-void	ft_init_fork(t_arg *args);
+int		ft_atoi_argv(t_rules *rules, t_arg *args, int nb_arg, char **arg);
 int		ft_check_argv(int argc, char **argv);
 // -- Timer -- //
 long	ft_time(void);

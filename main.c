@@ -54,7 +54,6 @@ void	ft_wait_end(t_arg *args, pthread_t *threads)
 		usleep(100);
 	}
 	ft_free(args, threads);
-	exit(0);
 }
 
 void	*ft_routine(void *arg)
@@ -85,7 +84,7 @@ void	*ft_routine(void *arg)
 	}
 }
 
-void	ft_philo(t_arg *args, pthread_t *threads)
+int	ft_philo(t_arg *args, pthread_t *threads)
 {
 	int	i;
 	int	ret;
@@ -95,8 +94,9 @@ void	ft_philo(t_arg *args, pthread_t *threads)
 	{
 		ret = pthread_create(&threads[i], NULL, ft_routine, args->philo + i);
 		if (ret != 0)
-			exit (1);
+			return (1);
 	}
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -108,12 +108,14 @@ int	main(int argc, char **argv)
 	if (argc > 4 && argc <= 6)
 	{
 		if (!ft_check_argv(argc, argv))
-			return (0);
+			return (1);
 		ft_time();
 		args = malloc(sizeof(t_arg));
-		ft_atoi_argv(&rules, args, argc, argv);
+		if (ft_atoi_argv(&rules, args, argc, argv) != 0)
+			return (2);
 		threads = malloc(sizeof(pthread_t) * args->nb_philo);
-		ft_philo(args, threads);
+		if (ft_philo(args, threads) != 0)
+			return (3);
 		ft_wait_end(args, threads);
 	}
 	else
